@@ -1,0 +1,44 @@
+---
+- name: deploy httpd
+  hosts: ansible2
+  tasks:
+    - name: install httpd and firewalld
+      yum:
+        name:
+          - httpd
+          - firewalld
+        state: latest
+
+    - name: start httpd service
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: start firewalld service
+      service:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: allow http through firewalld
+      firewalld:
+        service: httpd
+        state: enabled
+        permanent: true
+        immediate: true
+
+    - name: create a welcome message
+      copy:
+        content: "Welcome to my webpage!"
+        dest: /var/www/html/index.html
+
+- name: verify httpd service is started
+  hosts: localhost
+  become: false
+  tasks:
+    - name: test the uri
+      uri:
+        url: http://ansible.example.local
+        return_content: yes
+        status_code: 200

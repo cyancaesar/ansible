@@ -1,0 +1,18 @@
+---
+- name: clean httpd on ansible2
+  hosts: ansible2
+  tasks:
+    - name: stop httpd service
+      service:
+        name: httpd
+        state: stopped
+
+    - name: remove the apache package
+      yum:
+        name: httpd
+        state: absent
+
+    - name: remove the welcome file
+      file:
+        path: /var/www/html/index.html
+        state: absent
