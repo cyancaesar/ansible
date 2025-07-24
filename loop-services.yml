@@ -1,0 +1,26 @@
+---
+- name: Install and run services
+  hosts: all
+  vars:
+    services:
+      - httpd
+      - autofs
+  tasks:
+    - name: Install services
+      yum:
+        name: "{{ item }}"
+        state: latest
+      loop: "{{ services }}"
+
+    - name: Run services
+      service:
+        name: "{{ item }}"
+        state: started
+      loop: "{{ services }}"
+
+    - name: Debug the items
+      debug:
+        msg: "{{ item }}"
+      loop:
+        - httpd
+        - autofs

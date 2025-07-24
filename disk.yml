@@ -1,0 +1,14 @@
+# Tinkering with conditionals
+---
+- name: Verify SCSI disks
+  hosts: all
+  tasks:
+    - name: Print second disk existence
+      debug:
+        msg: You have a second disk
+      when: ansible_facts['devices']['sdb'] is defined
+
+    - name: Print no second disk existence
+      debug:
+        msg: You have no second disk
+      when: ansible_devices['sdb'] is not defined

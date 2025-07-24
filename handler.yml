@@ -1,0 +1,17 @@
+---
+- name: Demonstrate handler
+  hosts: ansible1
+  tasks:
+    - name: Copy files1.html
+      copy:
+        src: files/file1.html
+        dest: /var/www/file1.html
+      notify:
+        - restart_service
+    - meta: flush_handlers
+
+  handlers:
+    - name: restart_service
+      service:
+        name: httpd
+        state: restarted
