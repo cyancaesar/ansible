@@ -1,0 +1,12 @@
+---
+- name: Create user using a variable
+  hosts: all
+  vars:
+    - user: deployer
+  tasks:
+    - name: Using `debug` to view the variable
+      debug:
+        msg: User is {{ user }}
+    - name: Create a {{ user }} user
+      user:
+        name: "{{ user }}"
