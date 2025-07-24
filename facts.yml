@@ -1,0 +1,15 @@
+---
+- name: Show facts
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: Print system facts
+      debug:
+        msg:
+          - "{{ ansible_facts.system }}"
+          - "{{ ansible_facts.os_family }}"
+
+    - name: Print a message if this is a RedHat os family
+      when: 'ansible_facts.os_family == "RedHat"'
+      debug:
+        msg: This is Red Hat system

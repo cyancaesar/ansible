@@ -1,0 +1,22 @@
+# ansible all -m setup -a 'filter=ansible_local'
+---
+- name: Demonstrate custom facts
+  hosts: ansible1
+  vars:
+    remote_dir: /etc/ansible/facts.d
+    facts_file: localfacts.fact
+  tasks:
+    - name: Create a fact directory on host
+      file:
+        state: directory
+        recurse: yes
+        path: "{{ remote_dir }}"
+
+    - name: Copy facts file onto host
+      copy:
+        src: "{{ facts_file }}"
+        dest: "{{ remote_dir }}"
+
+    - name: Display software facts
+      debug:
+        var: ansible_facts.ansible_local
