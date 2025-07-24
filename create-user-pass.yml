@@ -1,0 +1,19 @@
+# Use `ansible-vault create host_vars/ansible[1-2]/vault` to create a vault
+# set vault password and insert `pwhash` variable in the secret file
+# run with `ansible-playbook create-user-pass.yml --ask-vault-pass`
+
+---
+- name: Create user using a variable
+  hosts: all
+  tasks:
+    - name: Using `debug` to view the variable
+      debug:
+        msg: User is {{ user }} and password is {{ pwhash }}
+
+    - name: Create user {{ user }}
+      user:
+        name: "{{ user }}"
+
+    - name: generate password
+      shell:
+        cmd: "echo {{ pwhash }} | passwd --stdin {{ user }}"
