@@ -1,0 +1,16 @@
+---
+- name: Configure VSFTPD using a template
+  hosts: all
+  vars:
+    anonymous_enable: yes
+    local_enable: yes
+    write_enable: yes
+    anon_upload_enable: yes
+  tasks:
+    - name: Install vsftpd
+      yum:
+        name: vsftpd
+    - name: Use template to copy
+      template:
+        src: vsftpd.j2
+        dest: /etc/vsftpd/vsftpd.conf

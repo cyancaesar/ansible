@@ -1,0 +1,32 @@
+# This playbook set the hosts file on the managed machines
+# with all the entries of hosts inventory
+# and sets the hostname on the machine and restart of hostname has changed
+
+---
+- name: Set hosts file and hostname
+  hosts: all
+  gather_facts: true # redundant
+  tasks:
+    - name: Display hosts on all groups
+      debug:
+        msg: IP address of host {{ item }} is {{ hostvars[item]['ansible_all_ipv4_addresses'][0] }}
+      loop: "{{ groups['all'] }}"
+
+    - name: Evaluate Jinja2 template
+      template:
+        src: hosts.j2
+        dest: /etc/hosts.bak
+
+    - name: Debug inventory_hostname
+      debug:
+        msg: "{{ inventory_hostname }}"
+
+    - name: Set hostname to {{ inventory_hostname }}
+      hostname:
+        name: "{{ inventory_hostname }}"
+      notify:
+        - restart_host
+
+  handlers:
+    - name: restart_host
+      reboot:
