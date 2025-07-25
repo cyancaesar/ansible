@@ -1,0 +1,19 @@
+---
+- name: Get package facts
+  hosts: all
+  tasks:
+    - name: Gather package facts
+      package_facts:
+        manager: auto
+
+    - name: Check if httpd is installed
+      debug:
+        msg: |
+          httpd is installed
+      when: "'httpd' in ansible_facts['packages']"
+      register: httpd_result
+
+    - name: Display package info
+      debug:
+        var: ansible_facts['packages']['httpd']
+      when: "'httpd' in ansible_facts['packages']"

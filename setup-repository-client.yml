@@ -1,0 +1,16 @@
+---
+- name: Setup repository on client
+  hosts: all
+  tasks:
+    - name: Setup yum repository
+      yum_repository:
+        name: ControlRepo
+        file: controlrepo
+        description: Control Repo
+        baseurl: http://46.101.184.100/repo
+        gpgcheck: false
+
+    - name: Install nmap
+      yum:
+        name: nmap
+        state: present
