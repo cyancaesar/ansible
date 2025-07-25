@@ -1,0 +1,12 @@
+---
+- name: Check ens34 exists on ansible2
+  hosts: ansible2
+  tasks:
+    - name: Assert that ens34 exists
+      assert:
+        that:
+          - "'ens34' in ansible_facts['interfaces']"
+        fail_msg: |
+          ens34 doesnt exist
+        success_msg: |
+          ens34 exists

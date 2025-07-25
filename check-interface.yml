@@ -1,0 +1,9 @@
+---
+- name: Check ens34 exists on ansible2
+  hosts: ansible2
+  tasks:
+    - name: Check ens34 interface exists
+      when: item == "ens34"
+      debug:
+        msg: Interface ens34 exists
+      loop: "{{ ansible_facts['interfaces'] }}"
