@@ -1,0 +1,12 @@
+---
+- name: Install nginx on ansible1 using role
+  hosts: ansible1
+  tasks:
+    - name: Ensure httpd is removed so it don't conflict with nginx
+      service:
+        name: httpd
+        state: stopped
+
+    - name: Import nginx role
+      import_role:
+        name: geerlingguy.nginx

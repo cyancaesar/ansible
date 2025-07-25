@@ -1,0 +1,11 @@
+# This playbook uses RHEL system roles to configure NTP pool
+---
+- name: Example with single pool
+  hosts: all
+  vars:
+    timesync_ntp_servers:
+      - hostname: 2.pool.ntp.org
+        pool: true
+        iburst: true
+  roles:
+    - rhel-system-roles.timesync
