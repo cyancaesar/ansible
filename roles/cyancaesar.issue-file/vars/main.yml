@@ -1,0 +1,3 @@
+---
+issue_file_path: /etc/issue
+issue_template_path: issue.j2

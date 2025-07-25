@@ -1,0 +1,4 @@
+- src: https://github.com/geerlingguy/ansible-role-nginx/archive/3.2.0.tar.gz
+  name: ansible-role-nginx
+- src: https://github.com/geerlingguy/ansible-role-docker/archive/7.4.7.tar.gz
+  name: ansible-role-docker

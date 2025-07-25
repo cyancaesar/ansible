@@ -1,0 +1,6 @@
+galaxy_info:
+  author: cyancaesar
+  description: A simple role to generate an issue file
+  company: N/A
+  license: MIT
+  min_ansible_version: 2.5

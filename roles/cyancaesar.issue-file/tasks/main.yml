@@ -1,0 +1,5 @@
+---
+- name: Generate issue file to `{{ issue_file_path }}`
+  template:
+    src: "{{ issue_template_path }}"
+    dest: "{{ issue_file_path }}"

@@ -1,0 +1,5 @@
+---
+- name: Use custom role to generate issue file
+  hosts: all
+  roles:
+    - name: cyancaesar.issue-file
