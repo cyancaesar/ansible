@@ -1,0 +1,33 @@
+---
+- name: Network management
+  hosts: ansible2
+  vars:
+    network_provider: nm
+    network_connections:
+      - name: ens160
+        type: ethernet
+        ip:
+          address: fc00::2002/64
+        zone: external
+
+  pre_tasks:
+    - name: Store interfaces list on a fact
+      set_fact:
+        interfaces: "{{ ansible_facts['interfaces'] }}"
+
+    - name: Debug
+      debug:
+        var: interfaces
+
+    - name: Get only the last ether interface
+      set_fact:
+        eth_interface: "{{ item }}"
+      loop: "{{ interfaces }}"
+      when: ansible_facts[item].type == "ether"
+
+    - name: Show `eth_interfaces`
+      debug:
+        var: eth_interface
+
+  roles:
+    - role: rhel-system-roles.network
