@@ -1,0 +1,12 @@
+---
+- name: Create a LVM volume group using `community.general.lvg` module
+  hosts: all
+
+  tasks:
+    - name: Create a volume group on `/dev/sdb1`
+      lvg:
+        vg: myvg
+        pvs:
+          - /dev/sdb1
+        pesize: 8MiB
+      when: ansible_facts['devices']['sdb']['partitions']['sdb1'] is defined

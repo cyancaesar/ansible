@@ -1,0 +1,17 @@
+---
+- name: Create simple partition
+  hosts: all
+
+  tasks:
+    - name: Check the existence of /dev/sdb
+      debug:
+        msg: "/dev/sdb exists"
+      when: ansible_facts['devices']['sdb'] is defined
+
+    - name: Create partition on /dev/sdb
+      parted:
+        device: /dev/sdb
+        number: 1
+        state: present
+        part_end: 3GiB
+      when: ansible_facts['devices']['sdb'] is defined

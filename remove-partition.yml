@@ -1,0 +1,15 @@
+---
+- name: Delete partition
+  hosts: all
+  tasks:
+    - name: Check the existence of /dev/sdb1
+      debug:
+        msg: "/dev/sd1 exists"
+      when: ansible_facts['devices']['sdb']['partitions']['sdb1'] is defined
+
+    - name: Remove partition on /dev/sdb1
+      parted:
+        device: /dev/sdb
+        number: 1
+        state: absent
+      when: ansible_facts['devices']['sdb']['partitions']['sdb1'] is defined

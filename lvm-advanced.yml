@@ -1,0 +1,77 @@
+---
+- name: Advanced LVM management playbook
+  hosts: all
+  vars:
+    - vg_name: vgfiles
+      lv_name: lvfiles
+      mount_point: /files
+
+  tasks:
+    - name: Print if no second SCSI disk exists
+      debug:
+        msg: |
+          No second disk on {{ ansible_hostname }}
+      when: ansible_facts['devices']['sdb'] is not defined
+
+    - name: End the play of hosts that don't have second SCSI disk
+      meta: end_host
+      when:
+        - ansible_facts['devices']['sdb'] is not defined
+
+    - name: Configure partition on second disk to include all space
+      parted:
+        device: /dev/sdb
+        number: 1
+        state: present
+        part_end: "100%"
+
+    - name: Create a volume group with the name {{ vg_name }}
+      lvg:
+        vg: "{{ vg_name }}"
+        pvs:
+          - /dev/sdb1
+
+    - name: Run facts gather again
+      setup:
+
+    - name: Debug facts
+      debug:
+        var: "ansible_facts['lvm']['vgs']['{{ vg_name }}']"
+
+    - name: Create 5 GB LV if VG is greater than 5 GB
+      lvol:
+        vg: "{{ vg_name }}"
+        lv: "{{ lv_name  }}"
+        size: 5g
+      when: ansible_facts['lvm']['vgs']['{{ vg_name }}']['size_g'] | int  > 5
+
+    - name: Create 3 GB LV if VG is less than or equal to 5 GB
+      lvol:
+        vg: "{{ vg_name }}"
+        lv: "{{ lv_name }}"
+        size: 3g
+      when: ansible_facts['lvm']['vgs']['{{ vg_name }}']['size_g'] | int  <= 5
+
+    - name: Format /dev/{{ vg_name }}/{{ lv_name }}
+      filesystem:
+        dev: /dev/{{ vg_name }}/{{ lv_name }}
+        fstype: xfs
+
+    - name: Ensure the mount point exists
+      file:
+        path: "{{ mount_point }}"
+        state: directory
+
+    - name: Add a mount point entry of /dev/{{ vg_name }}/{{ lv_name }}
+      mount:
+        path: "{{ mount_point }}"
+        src: /dev/{{ vg_name }}/{{ lv_name }}
+        fstype: xfs
+        state: present
+
+    - name: Mount /dev/{{ vg_name }}/{{ lv_name }}
+      mount:
+        path: "{{ mount_point }}"
+        src: /dev/{{ vg_name }}/{{ lv_name }}
+        fstype: xfs
+        state: mounted
