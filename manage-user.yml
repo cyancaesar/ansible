@@ -1,0 +1,22 @@
+---
+- name: Create a user with a password
+  hosts: all
+  vars:
+    - usernames:
+        - user
+        - admin
+        - dba
+  vars_files: vars/pass
+  tasks:
+    - name: Debug usernames variable
+      debug:
+        msg: "{{ usernames }}"
+
+    - name: Create user
+      user:
+        name: "{{ item }}"
+      loop: "{{ usernames }}"
+
+    - name: Set password of the users
+      shell: "echo {{ password }} | passwd --stdin {{ item }}"
+      loop: "{{ usernames }}"

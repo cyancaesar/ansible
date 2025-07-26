@@ -1,0 +1,10 @@
+---
+- name: Demonstrate cron module
+  hosts: all
+  tasks:
+    - name: Setup cron job for finding all file that has .txt and place it on /tmp/files
+      cron:
+        name: find_all_txts
+        minute: 5
+        hour: 5
+        job: 'mkdir -p /tmp/files && find / -type f -name *.txt -exec cp {} /tmp/files \; 2> /dev/null'

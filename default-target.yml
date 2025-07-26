@@ -1,0 +1,30 @@
+---
+- name: Change boot state to `multi-user.target`
+  hosts: all
+  vars:
+    - desired_target: multi-user.target
+  tasks:
+    - name: Get the default target
+      command: systemctl get-default
+      register: default_target
+      changed_when: false
+
+    - name: Print the default target
+      debug:
+        var: default_target['stdout']
+
+    - name: Print if the desired target is set
+      debug:
+        msg: "{{ desired_target }} is already set"
+      when: desired_target == default_target['stdout']
+
+    - name: Change to desired target if it is not set
+      command: systemctl set-default {{ desired_target }}
+      when: desired_target != default_target['stdout']
+      notify: reboot_sys
+
+  handlers:
+    - name: reboot_sys
+      reboot:
+        reboot_timeout: 300
+        test_command: uptime
